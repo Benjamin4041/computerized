@@ -2,3 +2,7 @@
 [[redirects]]
 from='/home'
 to='/home'
+
+[[redirects]]
+from='/'
+to='/'
