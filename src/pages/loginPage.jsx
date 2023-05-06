@@ -65,7 +65,7 @@ export default function Loginpage() {
         </p>
         <h1 className="text-xl font-extrabold">Sign in</h1>
         <span className="m-auto flex flex-col justify-center items-center">
-          <div className="flex gap-3 border-black border-4 w-fit pt-1 pb-1 pl-10 pr-10 rounded-full cursor-pointer">
+          {/* <div className="flex gap-3 border-black border-4 w-fit pt-1 pb-1 pl-10 pr-10 rounded-full cursor-pointer">
             <span>
               <svg
                 width="24"
@@ -93,8 +93,8 @@ export default function Loginpage() {
               </svg>
             </span>
             <p>Continue with Google</p>
-          </div>
-          <div className="flex gap-3 border-black border-4 w-fit pt-1 pb-1 pl-10 pr-10 rounded-full mt-5 justify-center items-center cursor-pointer">
+          </div> */}
+          {/* <div className="flex gap-3 border-black border-4 w-fit pt-1 pb-1 pl-10 pr-10 rounded-full mt-5 justify-center items-center cursor-pointer">
             <span>
               <svg
                 width="32"
@@ -110,12 +110,12 @@ export default function Loginpage() {
               </svg>
             </span>
             <p>Continue with Twitter</p>
-          </div>
-          <span className="flex  justify-center items-center w-fit gap-4 self-center mt-4">
+          </div> */}
+          {/* <span className="flex  justify-center items-center w-fit gap-4 self-center mt-4">
             <hr className="w-52 border-black" />
             <p>Or</p>
             <hr className="w-52 border-black" />
-          </span>
+          </span> */}
           <form action="" className="flex flex-col gap-3">
             <span className="flex flex-col">
               <label htmlFor="">Email</label>

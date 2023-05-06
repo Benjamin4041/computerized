@@ -1,33 +1,178 @@
-import React, { useEffect, useState } from "react";
+import React, {  useEffect, useRef, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
+import Alert from "../components/alert";
 
 export default function Register() {
-  let [faculty, setFaculty] = useState();
-  let [savedStudents, setSavedStudents] = useState([]);
-  let navigate = useNavigate();
-  let [studentName, setStudentName] = useState("");
-  let [programe, setPrograme] = useState("");
-  let [profile, setProfile] = useState({});
-  let [year, setYear] = useState("");
-  let token = localStorage.getItem("token")
-  useEffect(() => {
-    const matNumber = `CLU/${year}/${faculty}/${programe}/${(
-      savedStudents.length + 1
-    )
-      .toString()
-      .padStart(2, "0")}`;
-    setProfile({
-      studentName: studentName,
-      faculty: faculty,
-      programe: programe,
-      matNumber: matNumber,
-    });
-    console.log(savedStudents);
-  }, [savedStudents, year, faculty, programe, studentName]);
+ const navigate = useNavigate()
+ const [faculty,setFaculty] = useState([])
+ const [programe,setPrograme] = useState([])
+ const [fullname,setFullname] = useState()
+ const [allStudents,setAllStudents] = useState([])
+ let [filteredStudents] = useState([])
+ let programRef = useRef(null)
+ let [year,setYear] = useState()
+ let [studentRegistedStatus,setStudentRegistedStatus] = useState(null)
+//  let [matNumber,setMatNumber] =useState();
+ const formRef = useRef(null);
+ const token = localStorage.getItem('token')
 
-  const createMatNumber = () => {
-    setSavedStudents([...savedStudents, profile]);
-  };
+/* This is a `useEffect` hook that is fetching data from an API endpoint and setting the `allStudents`
+state with the result. It runs only once when the component mounts, as indicated by the empty
+dependency array `[]`. The `Authorization` header is set with a token retrieved from local storage.
+The fetched data is in JSON format and is passed to the `setAllStudents` function to update the
+state. If there is an error, it is logged to the console. */
+ useEffect(() => {
+    var myHeaders = new Headers();
+    myHeaders.append(
+      "Authorization",
+      `Bearer ${localStorage.getItem("token")} `
+    );
+
+
+    var requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    fetch("https://crns2.onrender.com/registerstudent", requestOptions)
+      .then((response) => response.json())
+      .then((result) =>{
+       return setAllStudents(result)
+      } )
+      .catch((error) => console.log("error", error));
+  },[]);
+  
+
+/**
+ * This function checks if an array of students exists and filters them based on their faculty,
+ * department, and year.
+ * @returns The `databaseCheck` function does not have a return statement. It either logs an error
+ * message to the console and returns nothing if `allStudents` is not an array, or filters the
+ * `allStudents` array based on certain conditions and pushes the filtered items to the
+ * `filteredStudents` array.
+ */
+let databaseCheck =()=>{
+  if (!Array.isArray(allStudents)) {
+    console.error('allStudents is not an array');
+    return;
+  }else{
+    allStudents.filter((item) => {
+          if (item.faculty.includes(faculty.short) && item.department.includes(programe.long) && item.year===parseInt(year)) {
+            return filteredStudents.push(item)
+          } else {
+            return null;
+          }
+        
+    });
+  }
+}
+
+/**
+ * This function sets the faculty state with a short and long value based on the selected option in a
+ * dropdown menu.
+ */
+const handleSelectChange = (event) => {
+  setFaculty({
+    'short':event.target.value,
+    'long':event.target[event.target.selectedIndex].text
+});
+
+};
+
+/**
+ * This function sets the 'short' and 'long' properties of an object based on the selected value and
+ * text of a dropdown menu.
+ */
+const handlePrograme = (event) => {
+  setPrograme({
+    'short':event.target.value,
+    'long':event.target[event.target.selectedIndex].text
+});
+  // console.log();
+};
+
+/**
+ * The function saves student data to a server using a POST request with authorization headers.
+ */
+let savedata=()=>{
+var myHeaders = new Headers();
+myHeaders.append("Content-Type", "application/json");
+myHeaders.append("Authorization", `Bearer ${token} `);
+
+var raw = JSON.stringify({
+  
+      "fullname":fullname ,
+      "faculty": faculty.short,
+      "department": programe.long,
+      "year":parseInt(year),
+      "matNumber": `clu/${year}/${faculty.short.slice(0,2)}/${programe.short}/${(
+        filteredStudents.length + 1
+      )
+        .toString()
+        .padStart(3, "0")}`
+
+});
+
+var requestOptions = {
+  method: 'POST',
+  headers: myHeaders,
+  body: raw,
+  redirect: 'follow'
+};
+
+
+fetch("https://crns2.onrender.com/registerstudent", requestOptions)
+  .then(response => response.json())
+  .then(result => {
+    // console.log(result.success)
+    if( result.success === false){
+      setStudentRegistedStatus(false)
+      return setTimeout(()=>setStudentRegistedStatus(null),5000)
+    }else{
+      setStudentRegistedStatus(true)
+      return setTimeout(()=>setStudentRegistedStatus(null),5000)
+    }
+  
+  })
+  .catch(error => console.log('error', error));
+
+}
+
+/**
+ * This function resets a form and clears an array of filtered students while also resetting a state
+ * variable for fullname.
+ */
+const handleReset = () => {
+  formRef.current.reset();
+    filteredStudents.splice(0,filteredStudents.length)
+  // console.log(filteredStudents,'empty')
+  setFullname('')
+};
+
+
+/**
+ * The function `clickBtn` performs several actions including checking a database, saving data, and
+ * resetting certain variables.
+ */
+let clickBtn=()=>{
+  databaseCheck()
+  // console.log(filteredStudents.length)
+  // setMatNumber( `clu/${year}/${faculty.short.slice(0,2)}/${programe.short}/${(
+  //   filteredStudents.length + 1
+  // )
+  //   .toString()
+  //   .padStart(3, "0")}`) 
+    savedata()
+    // console.log(filteredStudents)
+    handleReset()
+    // console.log(filteredStudents)
+}
+
+
+
+
+
   if (!!token) {
     return (
       <div
@@ -61,6 +206,7 @@ export default function Register() {
           <form
             action=""
             className="flex flex-wrap gap-10 justify-center items-center self-center "
+            ref={formRef}
           >
             <span>
               <label htmlFor="">Fullname</label>
@@ -68,84 +214,84 @@ export default function Register() {
               <input
                 type="text"
                 className="lg:w-[35.5rem]  lg:h-[3.5rem] bg-transparent border-2 border-gray-900 rounded"
-                value={studentName}
-                onChange={(e) => setStudentName(e.target.value)}
+                value={fullname}
+                onChange={(e)=>{setFullname(e.target.value)}}
               />
             </span>
             <span className="flex flex-col ">
               <label htmlFor="">Faculty</label>
               <select
-                name=""
+                name="select1"
                 id=""
-                value={faculty}
-                onChange={(e) => {
-                  setFaculty(e.target.value);
-                }}
+                onChange={handleSelectChange}
                 className="lg:w-[35.5rem]  lg:h-[3.5rem] bg-transparent border-2 border-gray-900 rounded"
+                defaultValue={"Choose Faculty"}
+            
               >
-                <option value="" selected disabled>
+                <option value="Choose Faculty" selected disabled>
                   Choose Faculty
                 </option>
-                <option value="Sci">Science</option>
-                <option value="Law">Law</option>
-                <option value="SAM"> SOCIAL AND MANAGEMENT SCIENCES</option>
-                <option value="BMS">BASIC MEDICAL SCIENCES</option>
-                <option value="Hum">HUMANITIES</option>
+                <option value="sci">Science</option>
+                <option value="sam">SOCIAL AND MANAGEMENT SCIENCES</option>
+                <option value="law">Law</option>
+                <option value="bms">BASIC MEDICAL SCIENCES</option>
+                <option value="hum">HUMANITIES</option>
               </select>
             </span>
             <span className="flex flex-col">
               <label htmlFor="">PROGRAMMES</label>
               <select
-                name=""
+                name="select2"
                 id=""
                 className="lg:w-[35.5rem]  lg:h-[3.5rem] bg-transparent   border-2 border-gray-900 rounded"
-                value={programe}
-                onChange={(e) => setPrograme(e.target.value)}
+                // value={programe}
+                onChange={handlePrograme}
+                defaultValue={'PROGRAMMES'}
               >
                 {/* <option value="" disabled selected>PROGRAMMES</option> */}
-                {faculty === "Sci" ? (
+                {faculty.short === "sci" ? (
                   <>
-                    <option value="" disabled selected>
+                    <option value="PROGRAMMES" disabled selected>
                       PROGRAMMES
                     </option>
-                    <option value="CSC">Computer Science</option>
-                    <option value="CS">Cyber Security</option>
+                    <option value="csc" ref={programRef}>computer science</option>
+                    <option value="cs" ref={programRef}>cyber security</option>
                   </>
-                ) : faculty === "Law" ? (
+                ) : faculty.short === "law" ? (
                   <>
-                    <option value="" disabled selected>
+                    <option value="PROGRAMMES" disabled selected>
                       PROGRAMMES
                     </option>
-                    <option value="LW">Legal Studies</option>
-                    <option value="">Other Law Options</option>
+                    <option value="law" ref={programRef}>legal studies</option>
+                    {/* <option value="">Other Law Options</option> */}
                   </>
-                ) : faculty === "SAM" ? (
+                ) : faculty.short === "sam" ? (
                   <>
-                    <option value="" disabled selected>
+                    <option value="PROGRAMMES" disabled selected>
                       PROGRAMMES
                     </option>
-                    <option value="BA">Business Administration</option>
-                    <option value="MC">Mass Communication</option>
+                    <option value="BA" ref={programRef}>business administration</option>
+                    <option value="MC" ref={programRef}>mass communication</option>
                   </>
-                ) : faculty === "BMS" ? (
+                ) : faculty.short === "bms" ? (
                   <>
-                    <option value="" disabled selected>
+                    <option value="PROGRAMMES" disabled selected>
                       PROGRAMMES
                     </option>
-                    <option value="BMC">Basic Medical Science</option>
-                    <option value="">Other Medical Options</option>
+                    <option value="bms" ref={programRef}>basic medical science</option>
+                    {/* <option value="">Other Medical Options</option> */}
                   </>
-                ) : faculty === "Hum" ? (
+                ) : faculty.short === "hum" ? (
                   <>
-                    <option value="" disabled selected>
+                    <option value="PROGRAMMES" disabled selected>
                       PROGRAMMES
                     </option>
-                    <option value="HDS">History and Diplomatic Studies</option>
-                    <option value="CRS">Christian Religious Studies</option>
+                    <option value="HDS" ref={programRef}>history and diplomatic studies</option>
+                    <option value="CRS" ref={programRef}>christian religious studies</option>
                   </>
                 ) : (
                   <>
-                    <option value="" disabled selected>
+                    <option value="PROGRAMMES" disabled selected>
                       PROGRAMMES
                     </option>
                   </>
@@ -164,23 +310,24 @@ export default function Register() {
                 onChange={(e) =>
                   setYear(e.target.value.split("-")[0].substr(2, 3))
                 }
+                  
               />
             </span>
           </form>
-          <button
-            className="bg-black text-white p-3 rounded self-end -translate-x-36 mt-4"
-            onClick={createMatNumber}
+          <div className="flex justify-between pt-5 items-center">
+            <p className={filteredStudents===[]?'hidden':"translate-x-36 cursor-pointer"} onClick={handleReset}>clear</p>
+            <button
+            className="bg-black text-white p-3 rounded self-end -translate-x-36  "
+            onClick={clickBtn}
           >
             submit
           </button>
-
-          {savedStudents.map((items) => {
-            return (
-              <>
-                <p className="text-black text-2xl">{items.matNumber}</p>
-              </>
-            );
-          })}
+          </div>
+          { 
+            studentRegistedStatus === true ?<Alert content={'User Registered'} errorCheck={true}/>
+            :studentRegistedStatus === false ? <Alert content={'Student Name or Matriculation Number Already Exist'} errorCheck={false}/>
+            : null
+        }
         </div>
       </div>
     );
