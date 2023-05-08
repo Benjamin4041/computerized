@@ -7,8 +7,12 @@ import Home from './pages/home';
 import Register from './pages/register';
 import Forgotpass from './pages/forgotpass';
 import Students from './pages/students';
+import PageNotFound from './pages/pagenotfound';
+import { PageProvider } from './context/context';
+
 function App() {
   return (
+    <PageProvider>
       <Router>
         <Routes>
           <Route path='/' element={<Loginpage />} />
@@ -17,9 +21,11 @@ function App() {
           <Route path='/register' element={<Register/>}/>
           <Route path='/forgotpassword' element={<Forgotpass/>}/>
           <Route path='/allstudents' element={<Students/>}/>
-          <Route path='*' element={<Loginpage/>}/>
+          <Route path='*' element={<PageNotFound/>}/>
         </Routes>
       </Router>
+    </PageProvider>
+
   );
 }
 

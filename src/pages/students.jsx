@@ -1,4 +1,4 @@
-import  { useEffect, useRef, useState } from "react";
+import  { useContext, useEffect, useRef, useState } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import Loader from "../components/loader/loader";
 import {IoMdArrowRoundBack} from 'react-icons/io'
@@ -6,7 +6,13 @@ import {FaFilter} from 'react-icons/fa'
 import {BiChevronDown} from 'react-icons/bi'
 import {  useNavigate } from "react-router-dom";
 import Auth from "../components/auth";
+import Pagecontroller from "../components/pageControl";
+import PagesContext from "../context/context";
 export default function Students() {
+
+
+
+
   let [displaySearch, setDisplaySearch] = useState(false);
   let [listOfStudents,setListofStudents] = useState('empty')
   let [apiData,setApiData] = useState()
@@ -17,6 +23,7 @@ export default function Students() {
   const pRef = useRef(null)
   const yearRef = useRef(null)
   const facultyRef = useRef(null)
+  const {start,end}= useContext(PagesContext);
   // let token = localStorage.getItem("token")
   useEffect(() => {
     var myHeaders = new Headers();
@@ -210,7 +217,7 @@ return(
               <Loader/>
           </div>
           :
-          listOfStudents.map((students) => (
+          listOfStudents.slice(start,end).map((students) => (
             <tr className="flex justify-between pb-3 cursor-pointer hover:bg-blue-300" onClick={()=>alert(students._id)}>
             <td className="w-1/5 text-center first-letter:uppercase">{students.fullname}</td>
             <td className="w-1/5 text-center">{students.faculty}</td>
@@ -221,6 +228,7 @@ return(
           ))
         }
       </table>
+      <Pagecontroller />
     </div>
   </Auth>
 )  
