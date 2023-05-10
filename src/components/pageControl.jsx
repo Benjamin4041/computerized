@@ -3,15 +3,18 @@ import PagesContext from "../context/context";
 
 export default function Pagecontroller() {
   const [pages] = useState(["1", "2", "3","...", "8", "9", "10"]);
+  
 //   const [currentPage, setCurrentPage] = useState("1");
-    const {currentPage,setCurrentPage,setStart,setEnd} = useContext(PagesContext);
+    const {currentPage,setCurrentPage,setStart,setEnd,pagesNum} = useContext(PagesContext);
       let next=()=>{
         setCurrentPage((prev)=>prev + 1)
         setStart((prev)=>prev + 10)
       }
       let previous = () => {
-        setCurrentPage((prev) => prev - 1)
-        setStart((prev) => prev - 10)
+        if(currentPage>1){
+          setCurrentPage((prev) => prev - 1)
+          setStart((prev) => prev - 10)
+        }
     }
     let numberClick=(e)=>{
       setStart((e.target.textContent - 1) * 10)
@@ -23,7 +26,7 @@ export default function Pagecontroller() {
         // console.log({ start, end, currentPage })
     }, [currentPage,setEnd])
     return (
-     <div className="max-w-screen-xl mx-auto mt-12 px-4 text-gray-600 md:px-8 translate-y-52">
+     <div className="max-w-screen-xl mx-auto lg:mt-12 px-4 text-gray-600 md:px-8 lg:translate-y-52">
         <div
           className="hidden items-center justify-between sm:flex"
           aria-label="Pagination"
@@ -94,15 +97,17 @@ export default function Pagecontroller() {
           <div
             // href="javascript:void(0)"
             className="px-4 py-2 border rounded-lg duration-150 hover:bg-gray-50 cursor-pointer"
+            onClick={previous}
           >
             Previous
           </div>
           <div className="font-medium">
-            Page {currentPage} of {pages.length}
+            Page {currentPage} of {pagesNum}
           </div>
           <div
             // href="javascript:void(0)"
             className="px-4 py-2 border rounded-lg duration-150 hover:bg-gray-50"
+            onClick={next}
           >
             Next
           </div>

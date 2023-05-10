@@ -13,19 +13,29 @@ export default function Students() {
 
 
 
-  let [displaySearch, setDisplaySearch] = useState(false);
-  let [listOfStudents,setListofStudents] = useState('empty')
-  let [apiData,setApiData] = useState()
-  let [searchValue,setSearchValue] = useState()
-  let [displayFilter,setDisplayFilter] = useState(false)
-  let [filterOption,setFilterOption] = useState('')
+  const [displaySearch, setDisplaySearch] = useState(false);
+  const [listOfStudents,setListofStudents] = useState('empty')
+  const [apiData,setApiData] = useState([])
+  const [searchValue,setSearchValue] = useState()
+  const [displayFilter,setDisplayFilter] = useState(false)
+  const [filterOption,setFilterOption] = useState('')
+  const [faculty,setFaculty] = useState()
+  const [year,setYear] = useState()
+  // let [filterFaculty,setFilterFaculty] = useState([])
   let navigate = useNavigate()
   const pRef = useRef(null)
   const yearRef = useRef(null)
   const facultyRef = useRef(null)
-  const {start,end}= useContext(PagesContext);
+  const {start,end,setPagesNum}= useContext(PagesContext);
   // let token = localStorage.getItem("token")
-  useEffect(() => {
+
+
+/* The `useEffect` hook is making an API call to retrieve a list of students and setting the state
+variables `listOfStudents` and `apiData` to the result of the API call. It is also setting the
+`Authorization` header of the request with a token retrieved from local storage. The empty array
+`[]` passed as the second argument to `useEffect` ensures that the effect only runs once, when the
+component mounts. */
+useEffect(() => {
     var myHeaders = new Headers();
     myHeaders.append(
       "Authorization",
@@ -44,19 +54,37 @@ export default function Students() {
       .then((result) =>{
         setListofStudents(result)
         setApiData(result)
-        return console.log(result)
-
+        let n =[...result].length/10
+        if(!Number.isInteger(n)){
+          return setPagesNum(parseInt(n)+1)
+        }
+          return setPagesNum(n)
       } )
       .catch((error) => console.log("error", error));
-  },[]);
-    useEffect(()=>{
+  },[setPagesNum]);
+
+/* This `useEffect` hook is watching for changes in the `searchValue` and `apiData` state variables. If
+the `searchValue` is an empty string, it sets the `listOfStudents` state variable to the value of
+`apiData`. This ensures that the full list of students is displayed when the search input is empty. */
+  useEffect(()=>{
       if(searchValue===''){
         setListofStudents(apiData)
       }
-    },[searchValue,apiData])
+  },[searchValue,apiData])
+
+
+/**
+ * The function updates the search value based on user input.
+ */
   let getSearch=(e)=>{
     setSearchValue(e.target.value)
   }
+
+/**
+ * This function filters a list of students based on a search value.
+ * @returns The function `search` is not returning anything. It is either updating the state of
+ * `listOfStudents` or displaying an alert message.
+ */
   let search =()=>{
     if(listOfStudents==='empty'){
       return alert("wait for data")
@@ -68,11 +96,21 @@ export default function Students() {
     }
     
   }  
+
+/**
+ * The function toggles the display of a filter option.
+ */
   let clickFilter=()=>{
     setDisplayFilter(displayFilter?false:true)
     // console.log(filterOption?filterOption.split(" ").slice(0,2).join(" ")==='By Department':filterOption)
   }
 
+/**
+ * The function handles the department filter option in a React component.
+ * @returns The `handleDepartment` function returns the result of calling the `setFilterOption`
+ * function with either an empty string or the text content of the `pRef` element, depending on the
+ * value of the `filterOption` variable.
+ */
   let handleDepartment=()=>{
     if(filterOption.split(" ").slice(0,2).join(" ")==='By Department'){
      return setFilterOption('')
@@ -80,6 +118,12 @@ export default function Students() {
     return setFilterOption(pRef.current.textContent)
     // console.log(pRef.current.textContent)
   }
+/**
+ * This function handles the selection of a year filter option.
+ * @returns The `handleYear` function returns the result of calling the `setFilterOption` function with
+ * either an empty string or the text content of the `yearRef` element, depending on the current value
+ * of the `filterOption` state variable.
+ */
   let handleYear=()=>{
     if(filterOption.split(" ").slice(0,2).join(" ")==='By Year'){
      return setFilterOption('')
@@ -87,6 +131,12 @@ export default function Students() {
     return setFilterOption(yearRef.current.textContent)
     // console.log(pRef.current.textContent)
   }
+/**
+ * This function handles the filtering of options based on faculty selection.
+ * @returns The `handleFaculty` function returns `setFilterOption('')` if the first two words of
+ * `filterOption` are "By Faculty", and it returns `setFilterOption(facultyRef.current.textContent)`
+ * otherwise.
+ */
   let handleFaculty=()=>{
     if(filterOption.split(" ").slice(0,2).join(" ")==='By Faculty'){
      return setFilterOption('')
@@ -95,26 +145,68 @@ export default function Students() {
     // console.log(pRef.current.textContent)
   }
 
+let selectedFacultyOption=(e)=>{
+  let checked = e.target.value
+  if( checked === faculty){
+    setFaculty('none')
+    return setListofStudents(apiData)
+    
+    
+  }
+  setFaculty(e.target.value)
+ return  setListofStudents(apiData.filter((item)=>item.faculty.includes(e.target.value)))
+}
+
+
+let selectedYearOption=(e)=>{
+  let checked = parseInt(e.target.value)
+  if( checked === year){
+    setYear('')
+    return setListofStudents(apiData)
+    
+    
+  }
+  setYear(parseInt(e.target.value))
+ return  setListofStudents(apiData.filter((item)=>item.year ===parseInt(e.target.value)))
+}
+
+
+
+
+
+// useEffect(()=>console.log(filterFaculty),[filterFaculty])
+
+
+
+
+
+
+
+
+
+
 
 return(
   <Auth>
      <div
-      className="min-h-screen w-screen pl-10 pr-10"
+      className="lg:h-screen min-w-screen min-h-screen lg:pl-10 lg:pr-10 md:h-screen lg:pt-0 pt-4 "
       style={{ backgroundImage: "url('assets/Header Background 1.png')" }}
     >
-      <IoMdArrowRoundBack size={20} className="translate-y-24 cursor-pointer" onClick={()=>navigate('/home')} />
-      <span className="flex justify-center items-center gap-36 translate-y-28 relative">
+      <IoMdArrowRoundBack size={20} className="lg:translate-y-24 cursor-pointer" onClick={()=>navigate('/home')} />
+      <span className="flex justify-center lg:flex-row flex-col items-center lg:gap-36 lg:translate-y-28 relative">
         <h1 className="text-center text-5xl font-bold self-center">
           List Of Students
         </h1>
 
+        {/* search and filter icons */}
+        <span className=" flex">
         <BiSearchAlt
           size={30}
           className={displaySearch ? "hidden" : "cursor-pointer"}
           onClick={() => setDisplaySearch(true)}
         />
-        <span className="flex gap-6 justify-center items-center">
-            <span className={displaySearch ? "flex relative" : "hidden"}>
+        <span className="flex gap-6 justify-center items-center" >
+            <span className={displaySearch ? "flex relative" : "hidden"} >
               <input
                 type="text"
                 name=""
@@ -123,30 +215,35 @@ return(
                 value={searchValue}
                 placeholder="search by name"
                 onChange={getSearch}
+                
               />
               <BiSearchAlt size={30} className="absolute left-48 top-1" onClick={search} />
             </span>
-            <FaFilter size={20} className="cursor-pointer" onClick={clickFilter}/>
+            <FaFilter size={20} className="cursor-pointer" onClick={()=>{
+              clickFilter()
+              }}/>
+        </span>
         </span>
       </span>
-      <div className={!displayFilter?"absolute left-[70%] top-52 bg-white z-10  pt-3 rounded hidden":"absolute left-[70%] top-52 bg-white z-10 p-5 pt-3 pb-3 rounded"}>
+      {/* filter */}
+      <div className={!displayFilter?"absolute left-[70%] top-52 bg-white z-10  pt-3 rounded hidden":"absolute lg:left-[70%]  left-20 top-26 lg:top-52 bg-white z-10 p-5 pt-3 pb-3 rounded"}>
         <p className="cursor-pointer flex items-center" ref={facultyRef} onClick={handleFaculty}>By Faculty <BiChevronDown size={25}/></p>
         {/* this is for the faculty */}
             <div className={filterOption.split(" ").slice(0,2).join(" ")==='By Faculty'?"":"hidden"}>
               <span className="flex gap-3 cursor-pointer">
-                <input type="radio" name="" id="" />
+                <input type="radio" name="" value={'sci'} id="" onClick={selectedFacultyOption} checked={faculty === 'sci'} />
                 <p>Sci</p>
               </span>
               <span className="flex gap-3 cursor-pointer">
-                <input type="radio" name="" id="" />
+                <input type="radio" name="" value={"law"} id="" onClick={selectedFacultyOption} checked={faculty === 'law'} />
                 <p>Law</p>
               </span>
               <span className="flex gap-3 cursor-pointer">
-                <input type="radio" name="" id="" />
+                <input type="radio" name="" value={"bms"} id="" onClick={selectedFacultyOption} checked={faculty === 'bms'} />
                 <p>BMS</p>
               </span>
               <span className="flex gap-3 cursor-pointer">
-                <input type="radio" name="" id="" />
+                <input type="radio" name="" value={"sms"} id="" onClick={selectedFacultyOption} checked={faculty === 'sms'} />
                 <p>SMS</p>
               </span>
             </div>
@@ -156,27 +253,27 @@ return(
         {/* this is for the year */}
           <div className={filterOption.split(" ").slice(0,2).join(" ")==='By Year'?"flex flex-wrap gap-x-[7rem] ":" flex-wrap gap-x-[7rem] hidden"}>
           <span className="flex gap-3 cursor-pointer">
-            <input type="radio" name="" id="" />
+            <input type="radio" name="" id="" value={17} onClick={selectedYearOption} checked={year === 17}/>
             <p>2017</p>
           </span>
           <span className="flex gap-3 cursor-pointer">
-            <input type="radio" name="" id="" />
+            <input type="radio" name="" id="" value={18} onClick={selectedYearOption} checked={year === 18}/>
             <p>2018</p>
           </span>
           <span className="flex gap-3 cursor-pointer">
-            <input type="radio" name="" id="" />
+            <input type="radio" name="" id="" value={19} onClick={selectedYearOption} checked={year === 19}/>
             <p>2019</p>
           </span>
           <span className="flex gap-3 cursor-pointer">
-            <input type="radio" name="" id="" />
+            <input type="radio" name="" id="" value={20} onClick={selectedYearOption} checked={year === 20}/>
             <p>2020</p>
           </span>
           <span className="flex gap-3 cursor-pointer">
-            <input type="radio" name="" id="" />
+            <input type="radio" name="" id="" value={21} onClick={selectedYearOption} checked={year === 21}/>
             <p>2021</p>
           </span>
           <span className="flex gap-3 cursor-pointer">
-            <input type="radio" name="" id="" />
+            <input type="radio" name="" id="" value={22} onClick={selectedYearOption} checked={year === 22}/>
             <p>2022</p>
           </span>
           </div>
@@ -203,26 +300,27 @@ return(
         </span>
           </div>
       </div>
-      <table className="translate-y-56 w-full">
-        <tr className="flex justify-between mb-3 ">
+      {/* table */}
+      <table className="lg:translate-y-56 lg:mt-0 w-full mt-8">
+        <tr className="flex lg:justify-between justify-center items-center lg:gap-0 gap-5 mb-3 ">
           <th className="w-1/5 text-center">Name</th>
-          <th className="w-1/5 text-center">Faculty</th>
-          <th className="w-1/5 text-center">Department</th>
-          <th className="w-1/5 text-center">Year</th>
+          <th className="w-1/5 text-center lg:inline hidden">Faculty</th>
+          <th className="w-1/5 text-center lg:inline hidden">Department</th>
+          <th className="w-1/5 text-center lg:inline hidden">Year</th>
           <th className="w-1/5 text-center">MatNumber</th>
         </tr>
         {
           listOfStudents==='empty'?
-          <div className="flex justify-center items-center h-[40vh]">
+          <tr className="flex justify-center items-center h-[40vh]">
               <Loader/>
-          </div>
+          </tr>
           :
           listOfStudents.slice(start,end).map((students) => (
-            <tr className="flex justify-between pb-3 cursor-pointer hover:bg-blue-300" onClick={()=>alert(students._id)}>
+            <tr className="flex lg:justify-between lg:gap-0 gap-5  pb-3 cursor-pointer hover:bg-blue-300 justify-center items-center" onClick={()=>alert(students._id)}>
             <td className="w-1/5 text-center first-letter:uppercase">{students.fullname}</td>
-            <td className="w-1/5 text-center">{students.faculty}</td>
-            <td className="w-1/5 text-center">{students.department}</td>
-            <td className="w-1/5 text-center">{students.year}</td>
+            <td className="w-1/5 text-center lg:inline hidden">{students.faculty}</td>
+            <td className="w-1/5 text-center lg:inline hidden">{students.department}</td>
+            <td className="w-1/5 text-center lg:inline hidden">{students.year}</td>
             <td className="w-1/5 text-center">{students.matNumber}</td>
           </tr>
           ))
