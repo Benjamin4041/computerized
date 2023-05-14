@@ -6,7 +6,12 @@ export default function Pagecontroller() {
   
 //   const [currentPage, setCurrentPage] = useState("1");
     const {currentPage,setCurrentPage,setStart,setEnd,pagesNum} = useContext(PagesContext);
+      
       let next=()=>{
+        if(currentPage===pagesNum){
+          setCurrentPage((prev) => prev - 1)
+          setStart((prev) => prev - 10)
+        }
         setCurrentPage((prev)=>prev + 1)
         setStart((prev)=>prev + 10)
       }
