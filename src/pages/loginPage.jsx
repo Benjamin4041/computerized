@@ -1,31 +1,18 @@
-import React, { useState } from "react";
+import React, {useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Authlayout from "../components/authlayout";
+import Alert from "../components/alert";
 export default function Loginpage() {
   // let [button,setbutton]=useState(false)
   let [email, setEmail] = useState("");
   let [password, setPassword] = useState("");
   let navigate = useNavigate();
-  // useEffect(()=>{
-  //     let myHeaders = new Headers();
-  //     myHeaders.append("Content-Type", "application/json");
-  //     let raw = JSON.stringify({
-  //         "email": email,
-  //         "password": password
-  //       });
-  //       var requestOptions = {
-  //         method: 'POST',
-  //         headers: myHeaders,
-  //         body: raw,
-  //         redirect: 'follow'
-  //       };
-
-  //       fetch("https://crns2.onrender.com/login", requestOptions)
-  //         .then(response => response.json())
-  //         .then(result => console.log(result))
-  //         .catch(error => console.log('error', error));
-
-  // },[button, email, password])
+  let [apiSuccess,setApiSuccess] = useState()
+  useEffect(()=>{
+    setTimeout(()=>{
+      setApiSuccess('')
+    },1500)
+  },[apiSuccess])
 
   let login = (e) => {
     e.preventDefault();
@@ -46,17 +33,20 @@ export default function Loginpage() {
       .then((response) => response.json())
       .then((result) => {
         if (result.message) {
+          setApiSuccess(result.success)
           return console.log(result);
         } else {
           console.log(result);
+          setApiSuccess(true)
           localStorage.setItem("token", result.token);
+
           return navigate("/home");
         }
       })
       .catch((error) => console.log("error", error));
     // setbutton(true)
   };
-
+  
   return (
     <Authlayout header={"Admin Login"}>
       <div className="lg:flex flex-col w-full p-6 hidden ">
@@ -148,6 +138,12 @@ export default function Loginpage() {
               Don’t have an acount? <Link to={"/signup"}>Sign up</Link>
             </p>
           </form>
+          {
+             apiSuccess===true?
+             <Alert content={'Login Successful'} errorCheck={apiSuccess} />
+             :apiSuccess===false
+             ? <Alert content={'Email or Password incorrect'} errorCheck={apiSuccess}/>:''
+          }
         </span>
       </div>
       {/* mobile view below */}

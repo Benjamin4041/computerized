@@ -26,7 +26,8 @@ export default function Pagecontroller() {
         // console.log({ start, end, currentPage })
     }, [currentPage,setEnd])
     return (
-     <div className="max-w-screen-xl mx-auto lg:mt-12 px-4 text-gray-600 md:px-8 lg:translate-y-52">
+      // lg:mt-12 lg:translate-y-52
+     <div className="max-w-screen-xl mx-auto  px-4  text-gray-600 md:px-8 ">
         <div
           className="hidden items-center justify-between sm:flex"
           aria-label="Pagination"

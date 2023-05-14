@@ -1,6 +1,7 @@
 import React, {  useEffect, useRef, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Alert from "../components/alert";
+import Auth from "../components/auth";
 
 export default function Register() {
  const navigate = useNavigate()
@@ -106,7 +107,7 @@ var raw = JSON.stringify({
       "faculty": faculty.short,
       "department": programe.long,
       "year":parseInt(year),
-      "matNumber": `clu/${year}/${faculty.short.slice(0,2)}/${programe.short}/${(
+      "matNumber": `clu/${year}/${faculty.short.slice(0,3)}/${programe.short}/${(
         filteredStudents.length + 1
       )
         .toString()
@@ -170,13 +171,10 @@ let clickBtn=()=>{
 }
 
 
-
-
-
-  if (!!token) {
-    return (
-      <div
-        className="h-screen w-screen flex flex-col "
+return(
+  <Auth>
+       <div
+        className="lg:h-screen lg:w-screen h-[100dvh] w-screen flex flex-col "
         style={{ backgroundImage: "url('assets/Header Background 1.png')" }}
       >
         <nav className="ml-6 mt-7 ">
@@ -200,7 +198,7 @@ let clickBtn=()=>{
           </span>
         </nav>
         <div className="m-auto flex flex-col">
-          <h1 className="text-center font-extrabold text-5xl mb-24">
+          <h1 className="text-center font-extrabold text-5xl lg:mb-24 mb-10">
             Register Students
           </h1>
           <form
@@ -213,7 +211,7 @@ let clickBtn=()=>{
               <br />
               <input
                 type="text"
-                className="lg:w-[35.5rem]  lg:h-[3.5rem] bg-transparent border-2 border-gray-900 rounded"
+                className="lg:w-[35.5rem]  lg:h-[3.5rem] bg-transparent border-2 border-gray-900 rounded w-[20.3rem] h-[3.1rem] pl-4"
                 value={fullname}
                 onChange={(e)=>{setFullname(e.target.value)}}
               />
@@ -224,7 +222,7 @@ let clickBtn=()=>{
                 name="select1"
                 id=""
                 onChange={handleSelectChange}
-                className="lg:w-[35.5rem]  lg:h-[3.5rem] bg-transparent border-2 border-gray-900 rounded"
+                className="lg:w-[35.5rem]  lg:h-[3.5rem] bg-transparent border-2 border-gray-900 rounded w-[20.3rem] h-[3.1rem]"
                 defaultValue={"Choose Faculty"}
             
               >
@@ -243,7 +241,7 @@ let clickBtn=()=>{
               <select
                 name="select2"
                 id=""
-                className="lg:w-[35.5rem]  lg:h-[3.5rem] bg-transparent   border-2 border-gray-900 rounded"
+                className="lg:w-[35.5rem]  lg:h-[3.5rem] bg-transparent   border-2 border-gray-900 rounded w-[20.3rem] h-[3.1rem]"
                 // value={programe}
                 onChange={handlePrograme}
                 defaultValue={'PROGRAMMES'}
@@ -270,8 +268,8 @@ let clickBtn=()=>{
                     <option value="PROGRAMMES" disabled selected>
                       PROGRAMMES
                     </option>
-                    <option value="BA" ref={programRef}>business administration</option>
-                    <option value="MC" ref={programRef}>mass communication</option>
+                    <option value="ba" ref={programRef}>business administration</option>
+                    <option value="mc" ref={programRef}>mass communication</option>
                   </>
                 ) : faculty.short === "bms" ? (
                   <>
@@ -286,8 +284,8 @@ let clickBtn=()=>{
                     <option value="PROGRAMMES" disabled selected>
                       PROGRAMMES
                     </option>
-                    <option value="HDS" ref={programRef}>history and diplomatic studies</option>
-                    <option value="CRS" ref={programRef}>christian religious studies</option>
+                    <option value="hds" ref={programRef}>history and diplomatic studies</option>
+                    <option value="crs" ref={programRef}>christian religious studies</option>
                   </>
                 ) : (
                   <>
@@ -305,7 +303,7 @@ let clickBtn=()=>{
               <label htmlFor="">Year</label>
               <input
                 type="date"
-                className="lg:w-[35.5rem]  lg:h-[3.5rem] bg-transparent border-2 border-gray-900 rounded"
+                className="lg:w-[35.5rem]  lg:h-[3.5rem] bg-transparent border-2 border-gray-900 rounded w-[20.3rem] md:w-[20.3rem] h-[3.1rem]  "
                 //   value={year}
                 onChange={(e) =>
                   setYear(e.target.value.split("-")[0].substr(2, 3))
@@ -314,15 +312,16 @@ let clickBtn=()=>{
               />
             </span>
           </form>
-          <div className="flex justify-between pt-5 items-center">
-            <p className={filteredStudents===[]?'hidden':"translate-x-36 cursor-pointer"} onClick={handleReset}>clear</p>
-            <button
-            className="bg-black text-white p-3 rounded self-end -translate-x-36  "
+          <button
+            className="bg-black text-white p-3 rounded self-end lg:mt-10 mt-3 m-auto w-[20.4rem]  h-[3.8rem] "
             onClick={clickBtn}
           >
             submit
           </button>
-          </div>
+          {/* <div className="flex justify-between pt-5 items-center">
+            <p className={filteredStudents===[]?'hidden':"translate-x-36 cursor-pointer"} onClick={handleReset}>clear</p>
+   
+          </div> */}
           { 
             studentRegistedStatus === true ?<Alert content={'User Registered'} errorCheck={true}/>
             :studentRegistedStatus === false ? <Alert content={'Student Name or Matriculation Number Already Exist'} errorCheck={false}/>
@@ -330,11 +329,20 @@ let clickBtn=()=>{
         }
         </div>
       </div>
-    );
-  }else{
-    return (<>
-     <Navigate to={'/'} />
+
+
+</Auth>
+)
+
+
+  // if (!!token) {
+  //   return (
+   
+  //   );
+  // }else{
+  //   return (<>
+  //    <Navigate to={'/'} />
     
-    </>)
-  }
+  //   </>)
+  // }
 }

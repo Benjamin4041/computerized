@@ -22,7 +22,7 @@ export default function Home() {
                         </div>
                     </span>
                     <span className='flex gap-8 pt-7'>
-                        <button className='bg-black text-white p-3 rounded' onClick={()=>navigate('/register')}>Register Student</button>
+                        <button className='bg-black text-white p-3 rounded' onClick={()=>navigate('/registerstudent')}>Register Student</button>
                         <button className='bg-black text-white p-3 rounded' onClick={()=>navigate('/allstudents')}>View all Student</button>
                     </span>
                     <button className='bg-black text-white p-3 rounded mt-10' onClick={handleLogout}>Log out</button>
