@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import Authlayout from '../components/authlayout'
 import { Link } from 'react-router-dom'
 
-export default function Forgotpass() {
+export default function Forgotpass(e) {
+  e.preventDefault()
   let [email,setEmail]=useState()
   let sendEmail=()=>{
     var myHeaders = new Headers();
