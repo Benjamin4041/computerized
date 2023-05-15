@@ -7,7 +7,7 @@ export default function Authlayout({ children , header}) {
         <img
           src="https://i.ibb.co/4ZLWd7K/image-554.png"
           alt=""
-          className="h-screen w-full"
+          className="h-screen w-full object-cover"
         />
         <h1 className="absolute text-4xl text-white lg:top-52 top-32 text-center w-full">{header}</h1>
       </div>

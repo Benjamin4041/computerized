@@ -429,7 +429,6 @@ the `searchValue` is an empty string, it sets the `listOfStudents` state variabl
             listOfStudents.slice(start, end).map((students) => (
               <tr
                 className="flex lg:justify-between lg:gap-0 gap-5  pb-3 cursor-pointer hover:bg-blue-300 justify-center items-center"
-                onClick={() => alert(students._id)}
               >
                 <td className="w-1/5 text-center first-letter:uppercase">
                   {students.fullname}

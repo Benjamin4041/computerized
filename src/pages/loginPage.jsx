@@ -147,7 +147,7 @@ export default function Loginpage() {
         </span>
       </div>
       {/* mobile view below */}
-      <div className="bg-amber-50 w-screen  lg:hidden absolute top-60 rounded-2xl p-6 ">
+      <div className="bg-amber-50 w-screen md:w-4/5 md:translate-x-32  lg:hidden absolute top-60 rounded-2xl p-6 ">
         <form
           action=""
           className="flex flex-col gap-3 justify-center items-center"
