@@ -21,7 +21,7 @@ var requestOptions = {
   redirect: 'follow'
 };
 
-fetch("localhost:3000/forgotpassword?email=anoruokachi2@gmail.com", requestOptions)
+fetch("https://crns2.onrender.com/forgotpassword", requestOptions)
   .then(response => response.text())
   .then(result => console.log(result))
   .catch(error => console.log('error', error));
