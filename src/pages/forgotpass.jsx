@@ -2,10 +2,11 @@ import React, { useState } from 'react'
 import Authlayout from '../components/authlayout'
 import { Link } from 'react-router-dom'
 
-export default function Forgotpass(e) {
-  e.preventDefault()
+export default function Forgotpass() {
+ 
   let [email,setEmail]=useState()
-  let sendEmail=()=>{
+  let sendEmail=(e)=>{
+    e.preventDefault()
     var myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
 
