@@ -60,7 +60,7 @@ export default function Resetpassword() {
                         </span>
                             
                         </span>
-                        <button className='bg-[#C3C3C3] p-3 rounded-md mt-4' >Change Password</button>
+                        <button className='bg-[#C3C3C3] p-3 rounded-md mt-4' onClick={resetPass} >Change Password</button>
                     </form>
                 </div>
                 <div className="bg-amber-50 w-screen md:w-4/5 md:translate-x-32 left-0  lg:hidden absolute top-60 rounded-2xl p-6 ">
@@ -91,7 +91,7 @@ export default function Resetpassword() {
                         </span>
                             
                         </span>
-                        <button className='bg-[#C3C3C3] p-3 rounded-md mt-4'>Change Password</button>
+                        <button className='bg-[#C3C3C3] p-3 rounded-md mt-4' onClick={resetPass}>Change Password</button>
                     </form>
                 </div>
             </div>
