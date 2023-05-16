@@ -56,7 +56,7 @@ export default function Resetpassword() {
                                 <AiFillEyeInvisible className={showPass2===false?"hidden":''} size={20}/>
                                 <AiFillEye className={showPass2===false?"":'hidden'}  size={20}/>
                             </div>
-                            <input type={showPass2===true?"text":"password"} value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} className='bg-slate-400 w-[13.2rem] h-8 rounded-lg pl-2'/>
+                            <input type={showPass2===true?"text":"password"} value={confirmpassword} onChange={(e)=>setConfirmPassword(e.target.value)} className='bg-slate-400 w-[13.2rem] h-8 rounded-lg pl-2'/>
                         </span>
                             
                         </span>
@@ -87,7 +87,7 @@ export default function Resetpassword() {
                                 <AiFillEyeInvisible className={showPass2===false?"hidden":''} size={20}/>
                                 <AiFillEye className={showPass2===false?"":'hidden'}  size={20}/>
                             </div>
-                            <input type={showPass2===true?"text":"password"} value={confirmPassword} onChange={(e)=>setConfirmPassword(e.target.value)} className='bg-slate-400 w-full h-8 rounded-lg pl-2'/>
+                            <input type={showPass2===true?"text":"password"} value={confirmpassword} onChange={(e)=>setConfirmPassword(e.target.value)} className='bg-slate-400 w-full h-8 rounded-lg pl-2'/>
                         </span>
                             
                         </span>
