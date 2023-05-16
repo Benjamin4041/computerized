@@ -12,7 +12,8 @@ export default function Resetpassword() {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
-    let resetPass=()=>{
+    let resetPass=(e)=>{
+        e.preventDefault()
         fetch(`https://crns2.onrender.com/reset-password/${id}/${token}`,{
             method: 'POST',
             headers: myHeaders,
