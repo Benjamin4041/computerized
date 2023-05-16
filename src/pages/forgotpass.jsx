@@ -3,7 +3,6 @@ import Authlayout from '../components/authlayout'
 import { Link } from 'react-router-dom'
 
 export default function Forgotpass() {
- 
   let [email,setEmail]=useState()
   let sendEmail=(e)=>{
     e.preventDefault()
@@ -11,7 +10,8 @@ export default function Forgotpass() {
 myHeaders.append("Content-Type", "application/json");
 
 var raw = JSON.stringify({
-  email
+  email,
+  frontendUrl:`${window.location.origin}/reset-password`,
 });
 
 var requestOptions = {

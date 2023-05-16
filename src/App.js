@@ -9,6 +9,7 @@ import Forgotpass from './pages/forgotpass';
 import Students from './pages/students';
 import PageNotFound from './pages/pagenotfound';
 import { PageProvider } from './context/context';
+import Resetpassword from './pages/resetpassword';
 
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
           <Route path='/forgotpassword' element={<Forgotpass/>}/>
           <Route path='/allstudents' element={<Students/>}/>
           <Route path='*' element={<PageNotFound/>}/>
-          <Route path='/test' />
+          <Route path='/reset-password/:id/:token' element={<Resetpassword/>} />
         </Routes>
       </Router>
     </PageProvider>
