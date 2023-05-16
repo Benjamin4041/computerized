@@ -1,12 +1,33 @@
 import React, { useState } from 'react'
 import Authlayout from '../components/authlayout'
 import {AiFillEye, AiFillEyeInvisible} from 'react-icons/ai'
+import {  useParams } from 'react-router-dom'
 
 export default function Resetpassword() {
     const [password,setPassword]=useState()
     const [confirmPassword,setConfirmPassword]=useState()
     const [showPass,setShowPass] = useState(false)
     const [showPass2,setShowPass2] = useState(false)
+    const params = useParams()
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+
+    let resetPass=()=>{
+        fetch(`https://crns2.onrender.com/reset-password/${params.id}/${params.token}`,{
+            method: 'POST',
+            headers: myHeaders,
+            body: JSON.stringify({
+                password,
+                confirmPassword
+            }),
+            redirect: 'follow'
+          })
+        .then(response => response.json())
+        .then(result => console.log(result))
+        .catch((err)=>{
+            console.log(err)
+        })
+    }
   return (
 
         <Authlayout>
