@@ -14,7 +14,7 @@ export default function Resetpassword() {
 
     let resetPass=(e)=>{
         e.preventDefault()
-        fetch(`https://crns2.onrender.com/reset-password/${id}/${token}`,{
+        fetch(`https://crns2.onrender.com/rest-password/${id}/${token}`,{
             method: 'POST',
             headers: myHeaders,
             body: JSON.stringify({
