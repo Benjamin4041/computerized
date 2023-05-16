@@ -19,7 +19,7 @@ export default function Resetpassword() {
             headers: myHeaders,
             body: JSON.stringify({
                 password,
-                confirmpassword
+                confirmpassword,
             }),
             redirect: 'follow'
           })
