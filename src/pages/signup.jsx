@@ -1,9 +1,48 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Authlayout from "../components/authlayout";
 import Auth from "../components/auth";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import Alert from "../components/alert";
 
 export default function Signup() {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [fullname, setFullName] = useState("");
+  const [showPass, setShowPass] = useState(false);
+  const [showPass2, setShowPass2] = useState(false);
+  const [apiResponse, setApiResponse] = useState({});
+  let myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+
+  let signUp = (e) => {
+    e.preventDefault();
+    if (password === confirmPassword && password !== "") {
+      fetch("https://crns2.onrender.com/register", {
+        method: "POST",
+        headers: myHeaders,
+        body: JSON.stringify({
+          fullname,
+          email,
+          password,
+          confirmPassword,
+        }),
+        redirect: "follow",
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result);
+          setApiResponse(result);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      setApiResponse({ success: false });
+    }
+  };
+  useEffect(() => {
+    setTimeout(() => setApiResponse({ success: null }), 5000);
+  }, [apiResponse]);
   return (
     <Auth>
       <Authlayout>
@@ -67,11 +106,13 @@ export default function Signup() {
               <p>Or</p>
               <hr className="w-52 border-black" />
             </span>
-            <form action="" className="flex flex-col gap-3">
+            <form action="" className="flex flex-col gap-3 mb-4">
               <span className="flex flex-col">
                 <label htmlFor="">Fullname</label>
                 <input
                   type="text"
+                  value={fullname}
+                  onChange={(e) => setFullName(e.target.value)}
                   className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
                 />
               </span>
@@ -79,27 +120,74 @@ export default function Signup() {
                 <label htmlFor="">Email</label>
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
                 />
               </span>
               <span className="flex flex-col">
                 <label htmlFor="">Password</label>
-                <input
-                  type="password"
-                  className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
-                />
+                <span className="relative flex flex-col">
+                  <div
+                    className="absolute  self-end pt-2 pr-3 cursor-pointer w-fit"
+                    onClick={() => {
+                      showPass === false
+                        ? setShowPass(true)
+                        : setShowPass(false);
+                    }}
+                  >
+                    <AiFillEyeInvisible
+                      className={showPass === false ? "hidden" : ""}
+                      size={20}
+                    />
+                    <AiFillEye
+                      className={showPass === false ? "" : "hidden"}
+                      size={20}
+                    />
+                  </div>
+                  <input
+                    type={showPass === true ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
+                  />
+                </span>
               </span>
               <span className="flex flex-col">
                 <label htmlFor="">Confirm Password</label>
-                <input
-                  type="password"
-                  className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
-                />
+                <span className="relative flex flex-col">
+                  <div
+                    className="absolute  self-end pt-2 pr-3 cursor-pointer w-fit"
+                    onClick={() => {
+                      showPass2 === false
+                        ? setShowPass2(true)
+                        : setShowPass2(false);
+                    }}
+                  >
+                    <AiFillEyeInvisible
+                      className={showPass2 === false ? "hidden" : ""}
+                      size={20}
+                    />
+                    <AiFillEye
+                      className={showPass2 === false ? "" : "hidden"}
+                      size={20}
+                    />
+                  </div>
+                  <input
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    type={showPass2 === true ? "text" : "password"}
+                    className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
+                  />
+                </span>
               </span>
               <Link to={"/forgotpassword"} className="self-end underline">
                 forgot password
               </Link>
-              <button className="bg-[#C3C3C3] p-20 pt-3 pb-3 w-fit rounded-md">
+              <button
+                className="bg-[#C3C3C3] p-20 pt-3 pb-3 w-fit rounded-md"
+                onClick={signUp}
+              >
                 Signup
               </button>
               <p>
@@ -109,6 +197,23 @@ export default function Signup() {
                 </Link>
               </p>
             </form>
+            {apiResponse.success === true ? (
+              <Alert
+                content={"User registered Successfuly"}
+                errorCheck={true}
+              />
+            ) : apiResponse.success === false ? (
+              <Alert
+                content={
+                  password === "" && fullname === "" && confirmPassword === ""
+                    ? "field must be filled"
+                    : "Error please try again"
+                }
+                errorCheck={false}
+              />
+            ) : (
+              ""
+            )}
           </span>
         </div>
         {/* mobile view below */}
@@ -121,6 +226,8 @@ export default function Signup() {
               <label htmlFor="">Fullname</label>
               <input
                 type="text"
+                value={fullname}
+                onChange={(e) => setFullName(e.target.value)}
                 className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
               />
             </span>
@@ -128,24 +235,71 @@ export default function Signup() {
               <label htmlFor="">Email</label>
               <input
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
               />
             </span>
             <span className="flex flex-col">
               <label htmlFor="">Password</label>
-              <input
-                type="password"
-                className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
-              />
+              <span className="relative">
+                <div
+                  className="absolute  left-44 pt-2 pr-3 cursor-pointer w-fit"
+                  onClick={() => {
+                    showPass2 === false
+                      ? setShowPass2(true)
+                      : setShowPass2(false);
+                  }}
+                >
+                  <AiFillEyeInvisible
+                    className={showPass2 === false ? "hidden" : ""}
+                    size={20}
+                  />
+                  <AiFillEye
+                    className={showPass2 === false ? "" : "hidden"}
+                    size={20}
+                  />
+                </div>
+                <input
+                  type={showPass === true ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
+                />
+              </span>
             </span>
             <span className="flex flex-col">
               <label htmlFor="">Confirm Password</label>
-              <input
-                type="password"
-                className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
-              />
+              <span className="relative">
+                <div
+                  className="absolute  left-44 pt-2 pr-3 cursor-pointer w-fit"
+                  onClick={() => {
+                    showPass2 === false
+                      ? setShowPass2(true)
+                      : setShowPass2(false);
+                  }}
+                >
+                  <AiFillEyeInvisible
+                    className={showPass2 === false ? "hidden" : ""}
+                    size={20}
+                  />
+                  <AiFillEye
+                    className={showPass2 === false ? "" : "hidden"}
+                    size={20}
+                  />
+                </div>
+                <input
+                  type={showPass2 === true ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="border-stone-950 border-2 w-72 h-10 rounded-md pl-2"
+                />
+              </span>
             </span>
-            <button className="bg-[#C3C3C3] p-20 pt-3 pb-3 w-fit rounded-md">
+            <button
+              className="bg-[#C3C3C3] p-20 pt-3 pb-3 w-fit rounded-md"
+              onClick={signUp}
+            >
               Signup
             </button>
             <p>
@@ -155,6 +309,20 @@ export default function Signup() {
               </Link>
             </p>
           </form>
+          {apiResponse.success === true ? (
+            <Alert content={"User registered Successfuly"} errorCheck={true} />
+          ) : apiResponse.success === false ? (
+            <Alert
+              content={
+                password === "" && fullname === "" && confirmPassword === ""
+                  ? "field must be filled"
+                  : "Error please try again"
+              }
+              errorCheck={false}
+            />
+          ) : (
+            ""
+          )}
         </div>
       </Authlayout>
     </Auth>

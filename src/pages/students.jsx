@@ -94,9 +94,38 @@ the `searchValue` is an empty string, it sets the `listOfStudents` state variabl
       setStart(0);
     } else {
       setListofStudents(
-        listOfStudents.filter((student) =>
-          student.fullname.includes(searchValue)
-        )
+        listOfStudents.filter((item) => {
+          if (!!item.fullname.includes(searchValue.toLowerCase()) === true) {
+            return item;
+          } else if (
+            !!item.fullname.includes(searchValue.toUpperCase()) === true
+          ) {
+            return item;
+          } else if (
+            !!item.fullname.includes(
+              searchValue.charAt(0).toUpperCase() +
+                searchValue.substr(1).toLowerCase
+            ) === true
+          ) {
+            console.log("first letter upper");
+            return item;
+          } else if (
+            !!item.fullname.includes(
+              searchValue.split(" ")[0] +
+                " " +
+                searchValue
+                  .substr(searchValue.indexOf(" "))
+                  .charAt(1)
+                  .toUpperCase() +
+                searchValue.substr(searchValue.indexOf(" ")).substr(2)
+            ) === true
+          ) {
+            return item;
+          } else {
+            alert("user not found");
+            return null;
+          }
+        })
       );
       setCurrentPage(1);
       setStart(0);
@@ -427,9 +456,7 @@ the `searchValue` is an empty string, it sets the `listOfStudents` state variabl
             </tr>
           ) : (
             listOfStudents.slice(start, end).map((students) => (
-              <tr
-                className="flex lg:justify-between lg:gap-0 gap-5  pb-3 cursor-pointer hover:bg-blue-300 justify-center items-center"
-              >
+              <tr className="flex lg:justify-between lg:gap-0 gap-5  pb-3 cursor-pointer hover:bg-blue-300 justify-center items-center">
                 <td className="w-1/5 text-center first-letter:uppercase">
                   {students.fullname}
                 </td>
