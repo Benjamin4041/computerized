@@ -70,6 +70,7 @@ Contributions to the CRNS project are welcome. If you want to contribute, please
 
 
 ## Hosted link
+https://sensational-speculoos-baf4c6.netlify.app
 
 ## License
 
