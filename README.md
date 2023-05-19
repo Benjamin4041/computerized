@@ -1,70 +1,76 @@
-# Getting Started with Create React App
+# Computerized Registration Number System (CRNS)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+CRNS is a web application built with the MERN (MongoDB, Express.js, React.js, Node.js) stack, designed to manage registration numbers in a computerized manner.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- User Registration: Users can register with their credentials to access the system.
+- User Authentication: Secure user authentication is implemented to protect sensitive data and ensure authorized access.
+- Registration Number Management: Users can add registration numbers.
+- Search and Filtering: The system provides search and filtering capabilities to quickly find specific registration numbers based on different criteria.
 
-### `npm start`
+## Installation
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1. Clone the repository:
+   ```
+   git clone https://github.com/your-username/CRNS.git
+   ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. Navigate to the project directory:
+   ```
+   cd CRNS
+   ```
 
-### `npm test`
+3. Install dependencies for the server:
+   ```
+   cd backend
+   npm install
+   ```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+4. Configure the environment variables:
+   - Create a `.env` file in the `backend` directory.
+   - Set the necessary environment variables (e.g., database connection string, secret key, etc.).
 
-### `npm run build`
+5. Start the server:
+   ```
+   cd ../backend
+   npm start
+   ```
+   ```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+8. Access the application in your browser at `http://localhost:3000`.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Folder Structure
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
+├── backend/         # Server-side code
+├── frontend/        # Client-side code
+├── public/          # Public assets
+└── README.md        # Project documentation
+```
 
-### `npm run eject`
+## Technologies Used
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- MongoDB: NoSQL database for storing registration number data.
+- Express.js: Backend framework for handling HTTP requests and APIs.
+- React.js: Frontend library for building user interfaces.
+- Node.js: JavaScript runtime environment for server-side development.
+- Mongoose: Object Data Modeling (ODM) library for MongoDB.
+- JWT: JSON Web Tokens for user authentication and authorization.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Contributing
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Contributions to the CRNS project are welcome. If you want to contribute, please follow these steps:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Make the necessary changes and commit them.
+4. Push the changes to your forked repository.
+5. Submit a pull request, explaining the changes you have made.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Hosted link
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## License
 
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This project is licensed under the [MIT License](LICENSE).
