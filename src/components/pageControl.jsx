@@ -2,20 +2,40 @@ import { useContext, useEffect, useState } from "react";
 import PagesContext from "../context/context";
 
 export default function Pagecontroller() {
-  const [pages] = useState(["1", "2", "3","...", "8", "9", "10"]);
+  const [pages,setPages] = useState(["1", "2", "3"]);
   
 //   const [currentPage, setCurrentPage] = useState("1");
     const {currentPage,setCurrentPage,setStart,setEnd,pagesNum} = useContext(PagesContext);
       
-      let next=()=>{
-        if(currentPage===pagesNum){
-          setCurrentPage((prev) => prev - 1)
-          setStart((prev) => prev - 10)
-        }
-        setCurrentPage((prev)=>prev + 1)
-        setStart((prev)=>prev + 10)
+  useEffect(()=>{
+    let pageIncrement = (pageNum) => {
+      let lastVal = pages.length;
+      if (lastVal === pagesNum) {
+        console.log("Pagination OK");
+        // console.log(arr);
+      } else {
+        pages.push(lastVal + 1);
       }
-      let previous = () => {
+    };
+    
+    for (let i = pages.length; i <= pagesNum; i++) {
+      pageIncrement(pagesNum);
+    }
+    
+    setPages( pages.map((item) => {
+      return item.toString();
+    }))
+  },[pagesNum,pages])
+
+    let next=()=>{
+      if(currentPage===pagesNum){
+        setCurrentPage((prev) => prev - 1)
+        setStart((prev) => prev - 10)
+      }
+      setCurrentPage((prev)=>prev + 1)
+      setStart((prev)=>prev + 10)
+    }
+    let previous = () => {
         if(currentPage>1){
           setCurrentPage((prev) => prev - 1)
           setStart((prev) => prev - 10)
@@ -23,7 +43,7 @@ export default function Pagecontroller() {
     }
     let numberClick=(e)=>{
       setStart((e.target.textContent - 1) * 10)
-      setCurrentPage(e.target.textContent)
+      setCurrentPage(~~e.target.textContent)
        
     }
     useEffect(() => {
@@ -66,7 +86,7 @@ export default function Pagecontroller() {
                     // href="javascript:void(0)"
                     aria-current={currentPage === item ? "page" : false}
                     className={`px-3 py-2 rounded-lg duration-150 hover:text-indigo-600 hover:bg-indigo-50 cursor-pointer ${
-                      currentPage === item
+                      currentPage === ~~item
                         ? "bg-indigo-50 text-indigo-600 font-medium"
                         : ""
                     }`}
