@@ -5,7 +5,7 @@ export default function Authlayout({ children, header }) {
     <div className="flex h-screen w-screen">
       <div className="lg:w-2/4 w-screen relative flex ">
         <img
-          src="https://scontent.fabb1-2.fna.fbcdn.net/v/t1.18169-9/29595045_1828262033871174_4105171380369203820_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=8bfeb9&_nc_eui2=AeEykkE_XUoOTsFdwvTCu1Dl6-bUFxKOsi7r5tQXEo6yLkGr399KjCCyQZ0tTHn70fibDJPiz17vYgw2lTh98avq&_nc_ohc=aBvVHyF4bWsAX9qEnWZ&_nc_ht=scontent.fabb1-2.fna&oh=00_AfBgFGHSZ9mLehxOXWHShSyZkVgp40XgzmRayxKkl0Xavg&oe=648E9E0E"
+          src="https://images.unsplash.com/photo-1627556704302-624286467c65?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80"
           alt=""
           className="h-screen w-full object-cover"
         />
