@@ -19,8 +19,13 @@ export default function Studentspage2() {
   const [faculty, setFaculty] = useState();
   const [year, setYear] = useState();
   const [studentDetailDisplay, setStudentDetailDisplay] = useState();
+  const [displayChart,setDisplayChart] = useState()
   // let [filterFaculty,setFilterFaculty] = useState([])
   let navigate = useNavigate();
+
+
+
+
   // const pRef = useRef(null);
   const yearRef = useRef(null);
   const facultyRef = useRef(null);
@@ -67,7 +72,7 @@ the `searchValue` is an empty string, it sets the `listOfStudents` state variabl
     if (searchValue === "") {
       setListofStudents(apiData);
     }
-  }, [searchValue, apiData]);
+  }, [searchValue]);
 
   /**
    * The function updates the search value based on user input.
