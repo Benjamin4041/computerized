@@ -4,6 +4,7 @@ import Loader from "../components/loader/loader";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FaFilter } from "react-icons/fa";
 import { BiChevronDown } from "react-icons/bi";
+import { BsBarChartLineFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import Auth from "../components/auth";
 import Pagecontroller from "../components/pageControl";
@@ -186,7 +187,7 @@ the `searchValue` is an empty string, it sets the `listOfStudents` state variabl
       apiData.filter((item) => item.year === parseInt(e.target.value))
     );
   };
-
+  
   return (
     <Auth>
       <div
@@ -235,6 +236,7 @@ the `searchValue` is an empty string, it sets the `listOfStudents` state variabl
                   clickFilter();
                 }}
               />
+              <BsBarChartLineFill size={20} className="cursor-pointer"/>
             </span>
           </span>
         </span>
