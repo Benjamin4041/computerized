@@ -4,12 +4,23 @@ import Loader from "../components/loader/loader";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { FaFilter } from "react-icons/fa";
 import { BiChevronDown } from "react-icons/bi";
-import { BsBarChartLineFill } from "react-icons/bs";
+import { BsFillBarChartLineFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import Auth from "../components/auth";
 import Pagecontroller from "../components/pageControl";
 import PagesContext from "../context/context";
-export default function Studentspage2() {
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
+
+export default function Students() {
   const [displaySearch, setDisplaySearch] = useState(false);
   const [listOfStudents, setListofStudents] = useState([]);
   const [apiData, setApiData] = useState([]);
@@ -19,7 +30,13 @@ export default function Studentspage2() {
   const [faculty, setFaculty] = useState();
   const [year, setYear] = useState();
   const [studentDetailDisplay, setStudentDetailDisplay] = useState();
+
+  const [displayChart, setDisplayChart] = useState(false);
+  const [labels,setLabels] = useState([]);
+  const [chartData,setChartData] = useState([])
+
   const [displayChart,setDisplayChart] = useState()
+
   // let [filterFaculty,setFilterFaculty] = useState([])
   let navigate = useNavigate();
 
@@ -31,6 +48,51 @@ export default function Studentspage2() {
   const facultyRef = useRef(null);
   const { start, end, setPagesNum, setCurrentPage, setStart } =
     useContext(PagesContext);
+
+  ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement,
+    Title,
+    Tooltip,
+    Legend
+  );
+
+  const options = {
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  };
+  const data = {
+    labels: labels,
+    datasets: [
+      {
+        label: ["Departments"],
+        data: chartData,
+        backgroundColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(255, 159, 64, 0.2)",
+          "rgba(255, 205, 86, 0.2)",
+          "rgba(75, 192, 192, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(153, 102, 255, 0.2)",
+          "rgba(201, 203, 207, 0.2)",
+        ],
+        borderColor: [
+          "rgb(255, 99, 132)",
+          "rgb(255, 159, 64)",
+          "rgb(255, 205, 86)",
+          "rgb(75, 192, 192)",
+          "rgb(54, 162, 235)",
+          "rgb(153, 102, 255)",
+          "rgb(201, 203, 207)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
   // let token = localStorage.getItem("token")
 
   /* The `useEffect` hook is making an API call to retrieve a list of students and setting the state
@@ -100,21 +162,38 @@ the `searchValue` is an empty string, it sets the `listOfStudents` state variabl
       setStart(0);
     } else {
       setListofStudents(
-        listOfStudents.filter((item)=>{          
-          if(!!item.fullname.includes(searchValue.toLowerCase())===true){
-              return item
-          }else if(!!item.fullname.includes(searchValue.toUpperCase())===true){
-              return item
-          }else if(!!item.fullname.includes(searchValue.charAt(0).toUpperCase() + searchValue.substr(1).toLowerCase())===true){
-                        console.log("first letter upper")
-                        return item
-          }else if(!!item.fullname.includes(searchValue.split(' ')[0] + ' ' + searchValue.substr(searchValue.indexOf(' ')).charAt(1).toUpperCase() + searchValue.substr(searchValue.indexOf(' ')).substr(2))===true){
-                      return item
-          }            
-              console.log("hmm")
-              return null
-          })  
-        )
+        listOfStudents.filter((item) => {
+          if (!!item.fullname.includes(searchValue.toLowerCase()) === true) {
+            return item;
+          } else if (
+            !!item.fullname.includes(searchValue.toUpperCase()) === true
+          ) {
+            return item;
+          } else if (
+            !!item.fullname.includes(
+              searchValue.charAt(0).toUpperCase() +
+                searchValue.substr(1).toLowerCase()
+            ) === true
+          ) {
+            console.log("first letter upper");
+            return item;
+          } else if (
+            !!item.fullname.includes(
+              searchValue.split(" ")[0] +
+                " " +
+                searchValue
+                  .substr(searchValue.indexOf(" "))
+                  .charAt(1)
+                  .toUpperCase() +
+                searchValue.substr(searchValue.indexOf(" ")).substr(2)
+            ) === true
+          ) {
+            return item;
+          }
+          console.log("hmm");
+          return null;
+        })
+      );
 
       setCurrentPage(1);
       setStart(0);
@@ -192,7 +271,25 @@ the `searchValue` is an empty string, it sets the `listOfStudents` state variabl
       apiData.filter((item) => item.year === parseInt(e.target.value))
     );
   };
-  
+
+  // this is for the chart
+  let chartFilter = () => {
+    setDisplayChart((prev) => !prev);
+    let department = [];
+    let data = apiData.filter((item) => item.faculty === faculty);
+    // this is to get all the department in a faculty and pass it to the chart
+    data.forEach((item) => {
+      if (department.includes(item.department)) return;
+      department.push(item.department);
+      setLabels(department)
+    });
+    // this is to get the number of students in a particular faculty
+    labels.forEach((label)=>{
+     let department= data.filter((item)=>item.department===label)
+      setChartData((prev)=>[...prev,department.length])
+    })
+  };
+
   return (
     <Auth>
       <div
@@ -241,7 +338,11 @@ the `searchValue` is an empty string, it sets the `listOfStudents` state variabl
                   clickFilter();
                 }}
               />
-              <BsBarChartLineFill size={20} className="cursor-pointer"/>
+              <BsFillBarChartLineFill
+                size={20}
+                className="cursor-pointer"
+                onClick={chartFilter}
+              />
             </span>
           </span>
         </span>
@@ -430,85 +531,97 @@ the `searchValue` is an empty string, it sets the `listOfStudents` state variabl
             </span>
           </div> */}
         </div>
-        {/* table */}
-        {/* lg:translate-y-56 */}
-        <table className=" w-full  lg:block  hidden relative mb-9">
-          <tr className="flex lg:justify-between justify-center items-center lg:gap-0 gap-5 mb-3 ">
-            <th className="w-1/5 text-center">Name</th>
-            <th className="w-1/5 text-center lg:inline hidden">Faculty</th>
-            <th className="w-1/5 text-center lg:inline hidden">Department</th>
-            <th className="w-1/5 text-center lg:inline hidden">Year</th>
-            <th className="w-1/5 text-center">MatNumber</th>
-          </tr>
-          {listOfStudents[0] === undefined ? (
-            <tr className="flex justify-center items-center h-[40vh]">
-              <Loader />
-            </tr>
-          ) : (
-            listOfStudents.slice(start, end).map((students) => (
-              <tr
-                className="flex lg:justify-between lg:gap-0 gap-5  pb-3 cursor-pointer hover:bg-blue-300 justify-center items-center"
-              >
-                <td className="w-1/5 text-center first-letter:uppercase">
-                  {students.fullname}
-                </td>
-                <td className="w-1/5 text-center lg:inline hidden">
-                  {students.faculty}
-                </td>
-                <td className="w-1/5 text-center lg:inline hidden">
-                  {students.department}
-                </td>
-                <td className="w-1/5 text-center lg:inline hidden">
-                  {students.year}
-                </td>
-                <td className="w-1/5 text-center">{students.matNumber}</td>
+
+        {displayChart ? (
+          <>
+            <Bar options={options} data={data} />
+          </>
+        ) : (
+          <>
+            {/* table */}
+            {/* lg:translate-y-56 */}
+            <table className=" w-full  lg:block  hidden relative mb-9">
+              <tr className="flex lg:justify-between justify-center items-center lg:gap-0 gap-5 mb-3 ">
+                <th className="w-1/5 text-center">Name</th>
+                <th className="w-1/5 text-center lg:inline hidden">Faculty</th>
+                <th className="w-1/5 text-center lg:inline hidden">
+                  Department
+                </th>
+                <th className="w-1/5 text-center lg:inline hidden">Year</th>
+                <th className="w-1/5 text-center">MatNumber</th>
               </tr>
-            ))
-          )}
-        </table>
-        {/* mobile view */}
-        <div className="lg:hidden xl:hidden inline ">
-          {listOfStudents.slice(start, end).map((students, indx) => (
-            <>
-              <div className="bg-gray-400 mb-3 ">
-                <div
-                  className="bg-[#EEEFF1] text-black text-center p-3"
-                  key={indx}
-                  onClick={() => {
-                    if (studentDetailDisplay === indx) {
-                      return setStudentDetailDisplay();
-                    }
-                    return setStudentDetailDisplay(indx);
-                  }}
-                >
-                  {students.fullname}
-                </div>
-                <span
-                  className={
-                    studentDetailDisplay === indx
-                      ? "lg:hidden md:hidden inline "
-                      : "hidden"
-                  }
-                  key={indx}
-                >
-                  <p className="text-center"> Faculty: {students.faculty}</p>
-                  <br />
-                  <p className="text-center">
-                    {" "}
-                    Department: {students.department}
-                  </p>
-                  <br />
-                  <p className="text-center">Year: {students.year}</p>
-                  <br />
-                  <p className="text-center">
-                    Matric Number: {students.matNumber}
-                  </p>
-                </span>
-              </div>
-            </>
-          ))}
-        </div>
-        <Pagecontroller />
+              {listOfStudents[0] === undefined ? (
+                <tr className="flex justify-center items-center h-[40vh]">
+                  <Loader />
+                </tr>
+              ) : (
+                listOfStudents.slice(start, end).map((students) => (
+                  <tr className="flex lg:justify-between lg:gap-0 gap-5  pb-3 cursor-pointer hover:bg-blue-300 justify-center items-center">
+                    <td className="w-1/5 text-center first-letter:uppercase">
+                      {students.fullname}
+                    </td>
+                    <td className="w-1/5 text-center lg:inline hidden">
+                      {students.faculty}
+                    </td>
+                    <td className="w-1/5 text-center lg:inline hidden">
+                      {students.department}
+                    </td>
+                    <td className="w-1/5 text-center lg:inline hidden">
+                      {students.year}
+                    </td>
+                    <td className="w-1/5 text-center">{students.matNumber}</td>
+                  </tr>
+                ))
+              )}
+            </table>
+            {/* mobile view */}
+            <div className="lg:hidden xl:hidden inline ">
+              {listOfStudents.slice(start, end).map((students, indx) => (
+                <>
+                  <div className="bg-gray-400 mb-3 ">
+                    <div
+                      className="bg-[#EEEFF1] text-black text-center p-3"
+                      key={indx}
+                      onClick={() => {
+                        if (studentDetailDisplay === indx) {
+                          return setStudentDetailDisplay();
+                        }
+                        return setStudentDetailDisplay(indx);
+                      }}
+                    >
+                      {students.fullname}
+                    </div>
+                    <span
+                      className={
+                        studentDetailDisplay === indx
+                          ? "lg:hidden md:hidden inline "
+                          : "hidden"
+                      }
+                      key={indx}
+                    >
+                      <p className="text-center">
+                        {" "}
+                        Faculty: {students.faculty}
+                      </p>
+                      <br />
+                      <p className="text-center">
+                        {" "}
+                        Department: {students.department}
+                      </p>
+                      <br />
+                      <p className="text-center">Year: {students.year}</p>
+                      <br />
+                      <p className="text-center">
+                        Matric Number: {students.matNumber}
+                      </p>
+                    </span>
+                  </div>
+                </>
+              ))}
+            </div>
+            <Pagecontroller />
+          </>
+        )}
       </div>
     </Auth>
   );
